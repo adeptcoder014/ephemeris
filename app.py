@@ -5,8 +5,7 @@ from util import get_planet_position, get_degree_minute_zodiac, zodiacData
 import sys
 import time
 import logging
-from watchdog.observers import Observer
-from watchdog.events import LoggingEventHandler
+
 from flask_cors import CORS
 
 # ==============================================================================
