@@ -1,7 +1,5 @@
 from flask import Flask
 import swisseph as swe
-import datetime
-import juliandate as jd
 from util import get_planet_position, get_degree_minute_zodiac, zodiacData
 # ==============================================================================
 
