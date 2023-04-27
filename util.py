@@ -1,6 +1,6 @@
 import swisseph as swe
 import datetime
-import juliandate as jd
+# import juliandate as jd
 
 zodiacData = {
     1: '♈',
@@ -45,9 +45,9 @@ def get_planet_position(planet):
     alt = 123
     lkoTime = swe.julday(time_ist.year, time_ist.month, time_ist.day,
                          time_ist.hour,1)
-    istTime = jd.from_gregorian(time_ist.year, time_ist.month, time_ist.day,
-                                time_ist.hour, time_ist.minute,
-                                time_ist.second)
+    # istTime = jd.from_gregorian(time_ist.year, time_ist.month, time_ist.day,
+    #                             time_ist.hour, time_ist.minute,
+    #                             time_ist.second)
     # ================ JULIAN_TIME ====================================
     jday = swe.utc_to_jd(current_time.year, current_time.month,
                          current_time.day, current_time.hour,
