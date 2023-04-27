@@ -41,7 +41,7 @@ def get():
     degree5, zodiac5, minute5 = get_degree_minute_zodiac(jupiter_pos)
     degree6, zodiac6, minute6 = get_degree_minute_zodiac(saturn_pos)
 
-    message = {
+    message = [{
         "☀": f"{degree} degree {round(minute)} minute in {zodiacData[zodiac]}",
         "🌙": f"{degree1} degree {round(minute1)} minute in {zodiacData[zodiac1]}",
         "☿️": f"{degree2} degree {round(minute2)} minute in {zodiacData[zodiac2]}",
@@ -49,8 +49,7 @@ def get():
         "♂️": f"{degree4} degree {round(minute4)} minute in {zodiacData[zodiac4]}",
         "♃": f"{degree5} degree {round(minute5)} minute in {zodiacData[zodiac5]}",
         "♄": f"{degree6} degree {round(minute6)} minute in {zodiacData[zodiac6]}",
-
-    }
+    }]
 
     json = {
         "status": 200,
@@ -62,4 +61,3 @@ def get():
 
 if __name__ == '__main__':
     app.run()
-  
