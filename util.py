@@ -55,7 +55,7 @@ def get_planet_position(planet):
 
 def get_houses_position():
     swe.set_ephe_path(f"{path}\swisseph")
-    current = datetime.datetime.now()
+    current = datetime.datetime.utcnow()
 
     UTCdt = swe.utc_time_zone(current.year, current.month, current.day,
                               current.hour, current.minute, current.second, 5.5)
