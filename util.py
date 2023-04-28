@@ -77,4 +77,44 @@ def get_houses_position():
     return [house_pos[0], ayanamsha]
 
 
-print(get_houses_position())
+# def get_ingress_time():
+
+#     # Set the path to the ephemeris file
+#     swe.set_ephe_path(f"{path}\swisseph")
+
+#     # Set the date and time
+#     date = datetime.datetime(2023, 5, 1, 0, 0, 0)
+
+#     # Calculate the Julian Day
+#     jd = swe.utc_to_jd(date.year, date.month, date.day,
+#                        date.hour, date.minute, date.second, 1)[1]
+
+#     # Get the position of the Sun
+#     sun_pos = swe.calc_ut(jd, swe.SUN)[0]
+
+#     # Get the position of the Ascendant to determine the house cusps
+#     asc_pos = swe.houses(jd, 0.0, 0.0)[1]
+
+#     # Determine the house that the Sun is in
+#     sun_house = None
+#     for i in range(12):
+#         if sun_pos >= asc_pos[i] and sun_pos < asc_pos[i+1]:
+#             sun_house = i+1
+#             break
+
+#     # Determine the time when the Sun enters Taurus
+#     if sun_house == 2:
+#         ingress_time = date
+#     else:
+#         next_date = date + datetime.timedelta(days=1)
+#         next_jd = swe.utc_to_jd(next_date.year, next_date.month, next_date.day,
+#                                 next_date.hour, next_date.minute, next_date.second, 1)[1]
+#         next_asc_pos = swe.houses(next_jd, 0.0, 0.0)[1]
+#         if sun_pos < next_asc_pos[1]:
+#             ingress_time = next_date
+#         else:
+#             ingress_time = date
+#         return ingress_time
+
+
+# print(get_ingress_time())

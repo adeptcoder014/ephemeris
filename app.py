@@ -97,7 +97,7 @@ def optimize_get():
         degree, zodiac, minute = get_degree_minute_zodiac(planet_pos)
         message.append({
             'name': swe.get_planet_name(planet),
-            'position': f"{degree} degree {round(minute)} minute in {zodiacData[zodiac]}"
+            'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
         })
 
     return {
@@ -116,9 +116,8 @@ def get_houses():
 
     houses = []
     for pos in positions:
-        newPos = pos-ayanamsha
         degree, zodiac, minute = get_degree_minute_zodiac(pos)
-        data = f"{degree} degree {round(minute)} minute in {zodiacData[zodiac]}"
+        data = f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
         houses.append({
             "name": zodiacData[zodiac],
             "position": data
