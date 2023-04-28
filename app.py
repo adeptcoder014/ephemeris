@@ -1,6 +1,6 @@
 from flask import Flask
 import swisseph as swe
-from util import get_planet_position, get_degree_minute_zodiac, zodiacData
+from util import get_planet_position, get_degree_minute_zodiac, zodiacData, get_houses_position
 
 import sys
 import time
@@ -77,10 +77,16 @@ CORS(app)
 #         "data": message
 #     }
 #     return json
+
+# ===========================================================
+@app.route('/')
+def home():
+    message = "<h1> Welcome to Ephemeris APIs 🗓️ <h1/>"
+    return message
 # ==============================================================================
 
 
-@app.route('/')
+@app.route('/planets')
 def optimize_get():
     planets = [swe.SUN, swe.MOON, swe.MERCURY,
                swe.VENUS, swe.MARS, swe.JUPITER, swe.SATURN]
@@ -100,6 +106,28 @@ def optimize_get():
     }
 
 # ==============================================================================
+
+
+@app.route('/houses')
+def get_houses():
+
+    positions = get_houses_position()[0]
+    ayanamsha = get_houses_position()[1]
+
+    houses = []
+    for pos in positions:
+        degree, zodiac, minute = get_degree_minute_zodiac(pos-ayanamsha)
+        data = f"{degree} degree {round(minute)} minute in {zodiacData[zodiac]}"
+        houses.append({
+            "name": zodiacData[zodiac],
+            "position": data
+        })
+
+    return {
+        "status": 200,
+        "data": houses
+    }
+# ===================================================================
 
 
 if __name__ == '__main__':
