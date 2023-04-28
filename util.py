@@ -1,7 +1,7 @@
 import swisseph as swe
 import datetime
 import os
-
+import pytz
 zodiacData = {
     1: '♈',
     2: '♉',
@@ -55,8 +55,9 @@ def get_planet_position(planet):
 
 def get_houses_position():
     swe.set_ephe_path(f"{path}\swisseph")
-    current = datetime.datetime.now(tz=5.5)
 
+    local_tz = pytz.timezone('Asia/Kolkata')
+    current = datetime.datetime.now(local_tz)
     UTCdt = swe.utc_time_zone(current.year, current.month, current.day,
                               current.hour, current.minute, current.second, 5.5)
     JD = swe.utc_to_jd(UTCdt[0], UTCdt[1], UTCdt[2],
