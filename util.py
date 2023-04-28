@@ -73,5 +73,4 @@ def get_houses_position():
     return [house_pos[0], ayanamsha]
 
 
-positions = get_houses_position()[0]
-ayanamsha = get_houses_position()[1]
+

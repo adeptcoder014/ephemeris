@@ -116,7 +116,8 @@ def get_houses():
 
     houses = []
     for pos in positions:
-        degree, zodiac, minute = get_degree_minute_zodiac(pos-ayanamsha)
+        newPos = pos-ayanamsha
+        degree, zodiac, minute = get_degree_minute_zodiac(newPos)
         data = f"{degree} degree {round(minute)} minute in {zodiacData[zodiac]}"
         houses.append({
             "name": zodiacData[zodiac],
