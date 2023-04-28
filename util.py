@@ -68,9 +68,12 @@ def get_houses_position():
     LAT = 26.8467
     LON = 80.9462
     hsysP = bytes('P', 'utf-8')
-    house_pos = swe.houses(natalUT, LAT, LON, hsysP)
+    house_pos = swe.houses_ex(natalUT, LAT, LON, hsysP,
+              swe.FLG_SIDEREAL )
+
+    # house_pos = swe.houses(natalUT, LAT, LON, hsysP)
 
     return [house_pos[0], ayanamsha]
 
 
-
+print(get_houses_position())
