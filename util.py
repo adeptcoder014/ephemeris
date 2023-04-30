@@ -41,11 +41,6 @@ def get_planet_position(planet):
     jday = swe.utc_to_jd(current_time.year, current_time.month,
                          current_time.day, current_time.hour,
                          current_time.minute, current_time.second, 1)
-    house_pos = swe.houses(
-        jday[0],
-        lat,
-        lon,
-    )
     swe.set_topo(lon, lat, alt)
     swe.set_sid_mode(swe.SIDM_LAHIRI, 0, 0)
     planet_pos = swe.calc(jday[0], planet_num, swe.FLG_SIDEREAL)
@@ -78,31 +73,28 @@ def get_houses_position():
 
 
 # def get_ingress_time():
-
-#     # Set the path to the ephemeris file
 #     swe.set_ephe_path(f"{path}\swisseph")
+#     local_tz = pytz.timezone('Asia/Kolkata')
+#     lat = 26.8467
+#     lon = 80.9462
 
-#     # Set the date and time
-#     date = datetime.datetime(2023, 5, 1, 0, 0, 0)
+#     date = datetime.datetime.now(local_tz)
+#     UTCdt = swe.utc_time_zone(
+#         date.year, date.month, date.day, date.hour, date.minute, date.second, 5.5)
+#     JD = swe.utc_to_jd(UTCdt[0], UTCdt[1], UTCdt[2], UTCdt[3], UTCdt[4], 0, 1)
+#     natalUT = JD[0]
 
-#     # Calculate the Julian Day
-#     jd = swe.utc_to_jd(date.year, date.month, date.day,
-#                        date.hour, date.minute, date.second, 1)[1]
+#     sun_pos = swe.calc_ut(natalUT, swe.SUN, swe.FLG_SIDEREAL)
+#     asc_pos = swe.houses(natalUT, lat, lon)[1]
+#     print('--------->',     sun_pos)
+#     return
 
-#     # Get the position of the Sun
-#     sun_pos = swe.calc_ut(jd, swe.SUN)[0]
-
-#     # Get the position of the Ascendant to determine the house cusps
-#     asc_pos = swe.houses(jd, 0.0, 0.0)[1]
-
-#     # Determine the house that the Sun is in
 #     sun_house = None
 #     for i in range(12):
 #         if sun_pos >= asc_pos[i] and sun_pos < asc_pos[i+1]:
 #             sun_house = i+1
 #             break
 
-#     # Determine the time when the Sun enters Taurus
 #     if sun_house == 2:
 #         ingress_time = date
 #     else:

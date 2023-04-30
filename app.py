@@ -88,8 +88,8 @@ def home():
 
 @app.route('/planets')
 def optimize_get():
-    planets = [swe.SUN, swe.MOON, swe.MERCURY,
-               swe.VENUS, swe.MARS, swe.JUPITER, swe.SATURN]
+    planets = [swe.SATURN, swe.JUPITER, swe.MARS, swe.SUN, swe.VENUS,  swe.MERCURY,
+               swe.MOON]
     message = []
 
     for planet in planets:
