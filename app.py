@@ -1,6 +1,6 @@
 from flask import Flask
 import swisseph as swe
-from util import get_planet_position, get_degree_minute_zodiac, zodiacData, get_houses_position
+from util import get_planet_position, get_degree_minute_zodiac, zodiacData, get_houses_position, get_planet_by_dateTime
 
 import sys
 import time
@@ -88,8 +88,8 @@ def home():
 
 @app.route('/planets')
 def optimize_get():
-    planets = [swe.SATURN, swe.JUPITER, swe.MARS, swe.SUN, swe.VENUS,  swe.MERCURY,
-               swe.MOON]
+    planets = [swe.SATURN, swe.JUPITER, swe.MARS,
+               swe.SUN, swe.VENUS,  swe.MERCURY, swe.MOON]
     message = []
 
     for planet in planets:
@@ -125,7 +125,29 @@ def get_houses():
 
     return {
         "status": 200,
-        "data": houses
+        "data": houses,
+    }
+# ==============================================================================
+
+
+@app.route('/natal')
+def get_natal():
+    planets = [swe.SATURN, swe.JUPITER, swe.MARS,
+               swe.SUN, swe.VENUS,  swe.MERCURY, swe.MOON]
+    message = []
+
+    for planet in planets:
+        planet_pos = get_planet_by_dateTime(planet)
+        degree, zodiac, minute = get_degree_minute_zodiac(planet_pos)
+        message.append({
+            'name': swe.get_planet_name(planet),
+            'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
+        })
+    
+
+    return {
+        "status": 200,
+        "data": message,
     }
 # ===================================================================
 

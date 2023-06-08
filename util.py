@@ -63,7 +63,7 @@ def get_houses_position():
     # print('Lahiri Ayanamsha :', ayanamsha)
     LAT = 26.8467
     LON = 80.9462
-    hsysP = bytes('P', 'utf-8')
+    hsysP = bytes('E', 'utf-8')
     house_pos = swe.houses_ex(natalUT, LAT, LON, hsysP,
                               swe.FLG_SIDEREAL)
 
@@ -72,41 +72,30 @@ def get_houses_position():
     return [house_pos[0], ayanamsha]
 
 
-# def get_ingress_time():
-#     swe.set_ephe_path(f"{path}\swisseph")
-#     local_tz = pytz.timezone('Asia/Kolkata')
-#     lat = 26.8467
-#     lon = 80.9462
+def get_planet_by_dateTime(planet):
 
-#     date = datetime.datetime.now(local_tz)
-#     UTCdt = swe.utc_time_zone(
-#         date.year, date.month, date.day, date.hour, date.minute, date.second, 5.5)
-#     JD = swe.utc_to_jd(UTCdt[0], UTCdt[1], UTCdt[2], UTCdt[3], UTCdt[4], 0, 1)
-#     natalUT = JD[0]
+    swe.set_ephe_path(f"{path}\swisseph")
+    year = 1995
+    month = 7
+    day = 14
+    hour =19
+    minute = 58
+    second = 0
 
-#     sun_pos = swe.calc_ut(natalUT, swe.SUN, swe.FLG_SIDEREAL)
-#     asc_pos = swe.houses(natalUT, lat, lon)[1]
-#     print('--------->',     sun_pos)
-#     return
+    planet_num = planet
+    lat = 26.85
+    lon = 80.91
+    alt = 123
+    current = datetime.datetime(year, month, day, hour, minute, second)
 
-#     sun_house = None
-#     for i in range(12):
-#         if sun_pos >= asc_pos[i] and sun_pos < asc_pos[i+1]:
-#             sun_house = i+1
-#             break
-
-#     if sun_house == 2:
-#         ingress_time = date
-#     else:
-#         next_date = date + datetime.timedelta(days=1)
-#         next_jd = swe.utc_to_jd(next_date.year, next_date.month, next_date.day,
-#                                 next_date.hour, next_date.minute, next_date.second, 1)[1]
-#         next_asc_pos = swe.houses(next_jd, 0.0, 0.0)[1]
-#         if sun_pos < next_asc_pos[1]:
-#             ingress_time = next_date
-#         else:
-#             ingress_time = date
-#         return ingress_time
-
-
-# print(get_ingress_time())
+    UTCdt = swe.utc_time_zone(current.year, current.month, current.day,
+                              current.hour, current.minute, current.second, 5.5)
+    # ================ JULIAN_TIME ====================================
+    jday = swe.utc_to_jd(UTCdt[0], UTCdt[1],
+                         UTCdt[2], UTCdt[3],
+                         UTCdt[4], UTCdt[5], 1)
+    swe.set_topo(lon, lat, alt)
+    swe.set_sid_mode(swe.SIDM_LAHIRI)
+    planet_pos = swe.calc(jday[0], planet_num, swe.FLG_SIDEREAL)
+    # print(house_pos[0][0])
+    return (planet_pos[0][0])
