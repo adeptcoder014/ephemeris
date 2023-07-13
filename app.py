@@ -1,12 +1,13 @@
-from flask import Flask
+from flask import Flask, request
 import swisseph as swe
-from util import get_planet_position, get_degree_minute_zodiac, zodiacData, get_houses_position, get_planet_by_dateTime
+from util import get_planet_position, get_degree_minute_zodiac,get_moon_position, zodiacData, get_houses_position, get_planet_by_dateTime
 
 import sys
 import time
 import logging
 
 from flask_cors import CORS
+import json
 
 # ==============================================================================
 
@@ -86,19 +87,27 @@ def home():
 # ==============================================================================
 
 
-@app.route('/planets')
+@app.route('/planets', methods=['POST'])
 def optimize_get():
+    data = request.json['value']
+    lat = data['location']['lat']
+    long = data['location']['long']
+    date = data['date']
+    timeOfBirth = data['time']
+
     planets = [swe.SATURN, swe.JUPITER, swe.MARS,
-               swe.SUN, swe.VENUS,  swe.MERCURY, swe.MOON]
+               swe.SUN, swe.VENUS,  swe.MERCURY, swe.MOON,swe.MEAN_NODE ]
     message = []
 
     for planet in planets:
-        planet_pos = get_planet_position(planet)
+        planet_pos = get_planet_position(planet,lat, long, date, timeOfBirth)
         degree, zodiac, minute = get_degree_minute_zodiac(planet_pos)
         message.append({
             'name': swe.get_planet_name(planet),
             'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
         })
+    
+  
 
     return {
         "status": 200,
@@ -108,11 +117,21 @@ def optimize_get():
 # ==============================================================================
 
 
-@app.route('/houses')
+@app.route('/houses', methods=['POST'])
 def get_houses():
+    data = request.json['value']
+    lat = data['location']['lat']
+    long = data['location']['long']
+    date = data['date']
+    timeOfBirth = data['time']
+    # print(" DATA ===========================> ", {
+    #     lat,
+    #     long
 
-    positions = get_houses_position()[0]
-    ayanamsha = get_houses_position()[1]
+    # })
+    data['location']
+    positions = get_houses_position(lat, long, date, timeOfBirth)[0]
+    # ayanamsha = get_houses_position()[1]
 
     houses = []
     for pos in positions:
@@ -130,7 +149,7 @@ def get_houses():
 # ==============================================================================
 
 
-@app.route('/natal')
+@app.route('/natal', methods=['GET', 'POST'])
 def get_natal():
     planets = [swe.SATURN, swe.JUPITER, swe.MARS,
                swe.SUN, swe.VENUS,  swe.MERCURY, swe.MOON]
@@ -143,13 +162,39 @@ def get_natal():
             'name': swe.get_planet_name(planet),
             'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
         })
-    
 
     return {
         "status": 200,
         "data": message,
     }
 # ===================================================================
+@app.route('/get-moon')
+def get_moon():
+
+    message = []
+
+    planet_pos = get_moon_position()
+    degree, zodiac, minute = get_degree_minute_zodiac(planet_pos)
+    message.append({
+            'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
+        })
+
+    return {
+        "status": 200,
+        "data": message
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':

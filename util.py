@@ -1,5 +1,7 @@
 import swisseph as swe
 import datetime
+from datetime import time
+
 import os
 import pytz
 zodiacData = {
@@ -29,45 +31,75 @@ def get_degree_minute_zodiac(pos):
     return (degree, zodiac, minute)
 
 
-def get_planet_position(planet):
+def get_planet_position(planet, lat, long, date, timeOfBirth):
     swe.set_ephe_path(f"{path}\swisseph")
+
     current_time = datetime.datetime.utcnow()
     planet_num = planet
-    lat = 26.8467
-    lon = 80.9462
-    alt = 123
+    lat = lat
+    long = long
+    # alt = 123
+    incomingYear = date.split("-")[0]
+    incomingMonth = date.split("-")[1]
+    incomingDay = date.split("-")[2]
+    incomingHour = timeOfBirth.split(":")[0]
+    incomingMinute = timeOfBirth.split(":")[1]
 
+    date_string = date
+    date_format = "%Y-%m-%d"
+
+    date_object = datetime.datetime.strptime(date_string, date_format)
+
+    local_time = datetime.datetime.combine(
+        date_object, time(int(incomingHour), int(incomingMinute)))
+
+    local_timezone = pytz.timezone('Asia/Kolkata')
+    utc_time = local_timezone.localize(local_time).astimezone(pytz.UTC)
+
+  
     # ================ JULIAN_TIME ====================================
-    jday = swe.utc_to_jd(current_time.year, current_time.month,
-                         current_time.day, current_time.hour,
-                         current_time.minute, current_time.second, 1)
-    swe.set_topo(lon, lat, alt)
+    # jday = swe.utc_to_jd(current_time.year, current_time.month,
+    #                      current_time.day, current_time.hour,
+    #                      current_time.minute, current_time.second, 1)
+    jday_new = swe.utc_to_jd(int(incomingYear), int(incomingMonth), int(incomingDay),
+                             utc_time.hour, utc_time.minute, 0, 1)
+    swe.set_topo(long, lat)
     swe.set_sid_mode(swe.SIDM_LAHIRI, 0, 0)
-    planet_pos = swe.calc(jday[0], planet_num, swe.FLG_SIDEREAL)
-    # print(house_pos[0][0])
+    planet_pos = swe.calc(jday_new[0], planet_num, swe.FLG_SIDEREAL)
     return (planet_pos[0][0])
 
 
-def get_houses_position():
+def get_houses_position(lat, long, date, time):
     swe.set_ephe_path(f"{path}\swisseph")
 
     local_tz = pytz.timezone('Asia/Kolkata')
     current = datetime.datetime.now(local_tz)
-    UTCdt = swe.utc_time_zone(current.year, current.month, current.day,
-                              current.hour, current.minute, current.second, 5.5)
-    JD = swe.utc_to_jd(UTCdt[0], UTCdt[1], UTCdt[2],
-                       UTCdt[3], UTCdt[4], 0, 1)
+   
+    incomingYear = date.split("-")[0]
+    incomingMonth = date.split("-")[1]
+    incomingDay = date.split("-")[2]
+    incomingHour = time.split(":")[0]
+    incomingMinute = time.split(":")[1]
+
+    # UTCdt = swe.utc_time_zone(current.year, current.month, current.day,
+    #                           current.hour, current.minute, current.second, 5.5)
+
+
+    UTCdt_new = swe.utc_time_zone(int(incomingYear), int(incomingMonth), int(incomingDay),
+                                  int(incomingHour), int(incomingMinute), 0, 5.5)
+    
+
+    JD = swe.utc_to_jd(UTCdt_new[0], UTCdt_new[1], UTCdt_new[2],
+                       UTCdt_new[3], UTCdt_new[4], 0, 1)
+
     natalUT = JD[1]
-    # Ayanamsha
     ayanamsha = swe.get_ayanamsa(natalUT)
-    # print('Lahiri Ayanamsha :', ayanamsha)
-    LAT = 26.8467
-    LON = 80.9462
+    LAT = lat
+    LON = long
     hsysP = bytes('E', 'utf-8')
     house_pos = swe.houses_ex(natalUT, LAT, LON, hsysP,
                               swe.FLG_SIDEREAL)
 
-    # house_pos = swe.houses(natalUT, LAT, LON, hsysP)
 
     return [house_pos[0], ayanamsha]
 
@@ -78,7 +110,7 @@ def get_planet_by_dateTime(planet):
     year = 1995
     month = 7
     day = 14
-    hour =19
+    hour = 19
     minute = 58
     second = 0
 
@@ -96,6 +128,26 @@ def get_planet_by_dateTime(planet):
                          UTCdt[4], UTCdt[5], 1)
     swe.set_topo(lon, lat, alt)
     swe.set_sid_mode(swe.SIDM_LAHIRI)
+    planet_pos = swe.calc(jday[0], planet_num, swe.FLG_SIDEREAL)
+    # print(house_pos[0][0])
+    return (planet_pos[0][0])
+
+
+def get_moon_position():
+    swe.set_ephe_path(f"{path}\swisseph")
+    current_time = datetime.datetime.utcnow()
+    planet_num = swe.MOON
+    lat = 26.8467
+    lon = 80.9462
+    # alt = 123
+
+    # ================ JULIAN_TIME ====================================
+    jday = swe.utc_to_jd(current_time.year, current_time.month,
+                         current_time.day, current_time.hour,
+                         current_time.minute, current_time.second, 1)
+
+    swe.set_topo(lon, lat)
+    swe.set_sid_mode(swe.SIDM_LAHIRI, 0, 0)
     planet_pos = swe.calc(jday[0], planet_num, swe.FLG_SIDEREAL)
     # print(house_pos[0][0])
     return (planet_pos[0][0])
