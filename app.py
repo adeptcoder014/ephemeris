@@ -1,5 +1,6 @@
 from flask import Flask, request
 import swisseph as swe
+import requests
 from util import get_planet_position, get_degree_minute_zodiac,get_moon_position, zodiacData, get_houses_position, get_planet_by_dateTime
 
 import sys
@@ -89,19 +90,32 @@ def home():
 
 @app.route('/planets', methods=['POST'])
 def optimize_get():
+
     data = request.json['value']
+    print( f"--- data -----", data)
+    # print( f"--- data ----- {data}")
     lat = data['location']['lat']
     long = data['location']['long']
-    date = data['date']
     timeOfBirth = data['time']
+    date = data['dob']
+
+
 
     planets = [swe.SATURN, swe.JUPITER, swe.MARS,
                swe.SUN, swe.VENUS,  swe.MERCURY, swe.MOON,swe.MEAN_NODE ]
     message = []
-
+      # message=[
+    #     {
+    #         'name': swe.get_planet_name(planet),
+    #         'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
+    #     } 
+    #     for planet in planets
+    #     planet_pos = get_planet_position(planet,lat, long, date, timeOfBirth)
+    #     degree,zodiac, minute = get_degree_minute_zodiac(planet_pos)
+    #     ]
     for planet in planets:
         planet_pos = get_planet_position(planet,lat, long, date, timeOfBirth)
-        degree, zodiac, minute = get_degree_minute_zodiac(planet_pos)
+        degree,zodiac, minute = get_degree_minute_zodiac(planet_pos)
         message.append({
             'name': swe.get_planet_name(planet),
             'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
@@ -122,17 +136,12 @@ def get_houses():
     data = request.json['value']
     lat = data['location']['lat']
     long = data['location']['long']
-    date = data['date']
+    date = data['dob']
     timeOfBirth = data['time']
-    # print(" DATA ===========================> ", {
-    #     lat,
-    #     long
-
-    # })
+    
     data['location']
     positions = get_houses_position(lat, long, date, timeOfBirth)[0]
     # ayanamsha = get_houses_position()[1]
-
     houses = []
     for pos in positions:
         degree, zodiac, minute = get_degree_minute_zodiac(pos)
