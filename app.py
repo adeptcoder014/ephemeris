@@ -101,8 +101,15 @@ def optimize_get():
 
 
 
-    planets = [swe.SATURN, swe.JUPITER, swe.MARS,
-               swe.SUN, swe.VENUS,  swe.MERCURY, swe.MOON,swe.MEAN_NODE ]
+    planets = [
+                       swe.MOON,
+                     swe.MERCURY,
+                 swe.VENUS,
+               swe.SUN,
+            swe.MARS,
+          swe.JUPITER,
+        swe.SATURN,
+                       swe.MEAN_NODE ]
     message = []
       # message=[
     #     {
