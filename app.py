@@ -1,7 +1,7 @@
 from flask import Flask, request
 import swisseph as swe
 import requests
-from util import get_planet_position, get_degree_minute_zodiac,get_moon_position, zodiacData, get_houses_position, get_planet_by_dateTime
+from util import get_planet_position, get_degree_minute_zodiac, get_moon_position, zodiacData, get_houses_position, get_planet_by_dateTime
 
 import sys
 import time
@@ -92,43 +92,48 @@ def home():
 def optimize_get():
 
     data = request.json['value']
-    print( f"--- data -----", data)
+    print(f"--- data -----", data)
     # print( f"--- data ----- {data}")
     lat = data['location']['lat']
     long = data['location']['long']
     timeOfBirth = data['time']
     date = data['dob']
 
-
-
     planets = [
-                       swe.MOON,
-                     swe.MERCURY,
-                 swe.VENUS,
-               swe.SUN,
-            swe.MARS,
-          swe.JUPITER,
+        swe.MOON,
+        swe.MERCURY,
+        swe.VENUS,
+        swe.SUN,
+        swe.MARS,
+        swe.JUPITER,
         swe.SATURN,
-                       swe.MEAN_NODE ]
+        swe.MEAN_NODE]
     message = []
-      # message=[
+    # message=[
     #     {
     #         'name': swe.get_planet_name(planet),
     #         'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
-    #     } 
+    #     }
     #     for planet in planets
     #     planet_pos = get_planet_position(planet,lat, long, date, timeOfBirth)
     #     degree,zodiac, minute = get_degree_minute_zodiac(planet_pos)
     #     ]
     for planet in planets:
-        planet_pos = get_planet_position(planet,lat, long, date, timeOfBirth)
-        degree,zodiac, minute = get_degree_minute_zodiac(planet_pos)
+        planet_pos = get_planet_position(planet, lat, long, date, timeOfBirth)
+        degree, zodiac, minute = get_degree_minute_zodiac(planet_pos)
+        # message.append({
+        #     'name': swe.get_planet_name(planet),
+        #     'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
+        # })
         message.append({
             'name': swe.get_planet_name(planet),
-            'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
+            # 'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'",
+            'position': {
+                'degree': degree,
+                "minute": minute,
+                'sign': zodiacData[zodiac]
+            }
         })
-    
-  
 
     return {
         "status": 200,
@@ -145,7 +150,7 @@ def get_houses():
     long = data['location']['long']
     date = data['dob']
     timeOfBirth = data['time']
-    
+
     data['location']
     positions = get_houses_position(lat, long, date, timeOfBirth)[0]
     # ayanamsha = get_houses_position()[1]
@@ -184,6 +189,8 @@ def get_natal():
         "data": message,
     }
 # ===================================================================
+
+
 @app.route('/get-moon')
 def get_moon():
 
@@ -192,25 +199,13 @@ def get_moon():
     planet_pos = get_moon_position()
     degree, zodiac, minute = get_degree_minute_zodiac(planet_pos)
     message.append({
-            'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
-        })
+        'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
+    })
 
     return {
         "status": 200,
         "data": message
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 if __name__ == '__main__':
