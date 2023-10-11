@@ -126,7 +126,7 @@ def optimize_get():
         #     'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
         # })
         message.append({
-            'name': swe.get_planet_name(planet),
+            'name': swe.get_planet_name(planet).lower(),
             # 'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'",
             'position': {
                 'degree': degree,
