@@ -125,16 +125,19 @@ def optimize_get():
         #     'name': swe.get_planet_name(planet),
         #     'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
         # })
+
         message.append({
             'name': swe.get_planet_name(planet).lower(),
             # 'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'",
             'position': {
                 'degree': degree,
                 "minute": minute,
-                'sign': zodiacData[zodiac]
+                'sign': zodiacData[zodiac]['sign'],
+                'name': zodiacData[zodiac]['name']
             }
         })
 
+    print('---------------------- message -------------------------------', message)
     return {
         "status": 200,
         "data": message
@@ -157,10 +160,12 @@ def get_houses():
     houses = []
     for pos in positions:
         degree, zodiac, minute = get_degree_minute_zodiac(pos)
-        data = f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
+        data = f"{degree}° {zodiacData[zodiac]['sign']} {round(minute)}'"
         houses.append({
-            "name": zodiacData[zodiac],
-            "position": data
+            "name": zodiacData[zodiac]['name'],
+            "houseNumber": zodiacData[zodiac]['serial'],
+            "houseSign": zodiacData[zodiac]['sign'],
+            "position": data,
         })
 
     return {

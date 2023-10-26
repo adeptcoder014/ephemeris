@@ -4,20 +4,84 @@ from datetime import time
 
 import os
 import pytz
-zodiacData = {
-    1: '♈',
-    2: '♉',
-    3: '♊',
-    4: '♋',
-    5: '♌',
-    6: '♍',
-    7: '♎',
-    8: '♏',
-    9: '♐',
-    10: '♑',
-    11: '♒',
-    12: '♓ ',
-}
+# zodiacData = {
+#     1: '♈',
+#     2: '♉',
+#     3: '♊',
+#     4: '♋',
+#     5: '♌',
+#     6: '♍',
+#     7: '♎',
+#     8: '♏',
+#     9: '♐',
+#     10: '♑',
+#     11: '♒',
+#     12: '♓ ',
+# }
+
+zodiacData = [
+    {
+        "serial": 1,
+        "sign": "♈",
+        "name": "aries"
+    },
+     {
+        "serial": 2,
+        "sign": "♉",
+        "name": "taurus"
+    },
+     {
+        "serial": 3,
+        "sign": "♊",
+        "name": "gemini"
+    },
+     {
+        "serial": 4,
+        "sign": "♋",
+        "name": "cancer"
+    },
+     {
+        "serial": 5,
+        "sign": "♌",
+        "name": "leo"
+    },
+     {
+        "serial": 6,
+        "sign": "♍",
+        "name": "virgo"
+    },
+     {
+        "serial": 7,
+        "sign": "♎",
+        "name": "libra"
+    },
+     {
+        "serial": 8,
+        "sign": "♏",
+        "name": "scorpio"
+    },
+     {
+        "serial": 9,
+        "sign": "♐",
+        "name": "sagittarius"
+    },
+     {
+        "serial": 10,
+        "sign": "♑",
+        "name": "capricorn"
+    },
+     {
+        "serial": 11,
+        "sign": "♒",
+        "name": "aquarius"
+    },
+     {
+        "serial": 12,
+        "sign": "♓",
+        "name": "pisces"
+    }
+]
+
 
 # =============================================
 path = os.getcwd()
@@ -27,7 +91,7 @@ def get_degree_minute_zodiac(pos):
     deg = int(pos)
     degree = deg % 30
     minute = (pos - deg) * 60
-    zodiac = int(deg / 30) + 1
+    zodiac = int(deg / 30)
     return (degree, zodiac, minute)
 
 
@@ -56,7 +120,6 @@ def get_planet_position(planet, lat, long, date, timeOfBirth):
     local_timezone = pytz.timezone('Asia/Kolkata')
     utc_time = local_timezone.localize(local_time).astimezone(pytz.UTC)
 
-  
     # ================ JULIAN_TIME ====================================
     # jday = swe.utc_to_jd(current_time.year, current_time.month,
     #                      current_time.day, current_time.hour,
@@ -74,7 +137,7 @@ def get_houses_position(lat, long, date, time):
 
     local_tz = pytz.timezone('Asia/Kolkata')
     current = datetime.datetime.now(local_tz)
-   
+
     incomingYear = date.split("-")[0]
     incomingMonth = date.split("-")[1]
     incomingDay = date.split("-")[2]
@@ -84,10 +147,8 @@ def get_houses_position(lat, long, date, time):
     # UTCdt = swe.utc_time_zone(current.year, current.month, current.day,
     #                           current.hour, current.minute, current.second, 5.5)
 
-
     UTCdt_new = swe.utc_time_zone(int(incomingYear), int(incomingMonth), int(incomingDay),
                                   int(incomingHour), int(incomingMinute), 0, 5.5)
-    
 
     JD = swe.utc_to_jd(UTCdt_new[0], UTCdt_new[1], UTCdt_new[2],
                        UTCdt_new[3], UTCdt_new[4], 0, 1)
@@ -99,7 +160,6 @@ def get_houses_position(lat, long, date, time):
     hsysP = bytes('E', 'utf-8')
     house_pos = swe.houses_ex(natalUT, LAT, LON, hsysP,
                               swe.FLG_SIDEREAL)
-
 
     return [house_pos[0], ayanamsha]
 
