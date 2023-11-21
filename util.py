@@ -211,3 +211,26 @@ def get_moon_position():
     planet_pos = swe.calc(jday[0], planet_num, swe.FLG_SIDEREAL)
     # print(house_pos[0][0])
     return (planet_pos[0][0])
+
+
+
+def getPlanetsByDate(dateTime):
+    swe.set_ephe_path(f"{path}\swisseph")
+    current_time = datetime.datetime.utcnow()
+    print('current_time -------------->',current_time)
+    planet_num = swe.MOON
+    lat = 26.8467
+    lon = 80.9462
+    # alt = 123
+
+    # ================ JULIAN_TIME ====================================
+    jday = swe.utc_to_jd(current_time.year, current_time.month,
+                         current_time.day, current_time.hour,
+                         current_time.minute, current_time.second, 1)
+
+    print()
+    swe.set_topo(lon, lat)
+    swe.set_sid_mode(swe.SIDM_LAHIRI, 0, 0)
+    planet_pos = swe.calc(jday[0], planet_num, swe.FLG_SIDEREAL)
+    # print(house_pos[0][0])
+    return (planet_pos[0][0])

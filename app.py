@@ -1,7 +1,7 @@
 from flask import Flask, request
 import swisseph as swe
 import requests
-from util import get_planet_position, get_degree_minute_zodiac, get_moon_position, zodiacData, get_houses_position, get_planet_by_dateTime
+from util import get_planet_position, get_degree_minute_zodiac, get_moon_position, zodiacData, get_houses_position, get_planet_by_dateTime,getPlanetsByDate
 
 import sys
 import time
@@ -204,12 +204,45 @@ def get_moon():
     planet_pos = get_moon_position()
     degree, zodiac, minute = get_degree_minute_zodiac(planet_pos)
     message.append({
-        'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
+        'position': f"{degree}° {zodiacData[zodiac]['sign']} {round(minute)}'"
     })
 
     return {
         "status": 200,
         "data": message
+    }
+
+
+
+
+
+
+@app.route('/get-planet-byDateTime', methods=['GET'])
+def get_planet_byDateTime():
+    dateTime = request.json['date']
+    
+   
+    dataP= getPlanetsByDate(dateTime)
+    print(f"---  dataP -----",  dataP)
+    return
+
+    # planets = [
+    #     swe.MOON,
+    #     swe.MERCURY,
+    #     swe.VENUS,
+    #     swe.SUN,
+    #     swe.MARS,
+    #     swe.JUPITER,
+    #     swe.SATURN,
+    #     swe.MEAN_NODE]
+    # message = []
+
+    
+
+    print('---------------------- message -------------------------------', message)
+    return {
+        "status": 200,
+        "data": "message"
     }
 
 
