@@ -217,29 +217,17 @@ def get_moon():
 
 
 
-@app.route('/get-planet-byDateTime', methods=['GET'])
+@app.route('/get-planet-byDateTime', methods=['POST'])
 def get_planet_byDateTime():
-    dateTime = request.json['date']
+    date = request.json['date']
+    
+    planet_pos = get_planet_by_dateTime(swe.MOON)
+
+    print("planet_pos -----",get_degree_minute_zodiac(planet_pos))
     
    
-    dataP= getPlanetsByDate(dateTime)
-    print(f"---  dataP -----",  dataP)
-    return
+    # dataP= getPlanetsByDate(date)
 
-    # planets = [
-    #     swe.MOON,
-    #     swe.MERCURY,
-    #     swe.VENUS,
-    #     swe.SUN,
-    #     swe.MARS,
-    #     swe.JUPITER,
-    #     swe.SATURN,
-    #     swe.MEAN_NODE]
-    # message = []
-
-    
-
-    print('---------------------- message -------------------------------', message)
     return {
         "status": 200,
         "data": "message"

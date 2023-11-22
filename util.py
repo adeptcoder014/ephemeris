@@ -167,9 +167,9 @@ def get_houses_position(lat, long, date, time):
 def get_planet_by_dateTime(planet):
 
     swe.set_ephe_path(f"{path}\swisseph")
-    year = 1995
-    month = 7
-    day = 14
+    year = 2023
+    month = 11
+    day = 22
     hour = 19
     minute = 58
     second = 0
@@ -216,21 +216,38 @@ def get_moon_position():
 
 def getPlanetsByDate(dateTime):
     swe.set_ephe_path(f"{path}\swisseph")
-    current_time = datetime.datetime.utcnow()
-    print('current_time -------------->',current_time)
+
+    current_time = dateTime.datetime.utcnow()
     planet_num = swe.MOON
     lat = 26.8467
-    lon = 80.9462
+    long = 80.9462
     # alt = 123
+    incomingYear = date.split("-")[0]
+    incomingMonth = date.split("-")[1]
+    incomingDay = date.split("-")[2]
+    # incomingHour = timeOfBirth.split(":")[0]
+    # incomingMinute = timeOfBirth.split(":")[1]
+
+    date_string = date
+    date_format = "%Y-%m-%d"
+
+    date_object = datetime.datetime.strptime(date_string, date_format)
+
+    # local_time = datetime.datetime.combine(
+    #     date_object, time(int(incomingHour), int(incomingMinute)))
+    local_time = datetime.datetime.combine(date_object)
+
+
+    local_timezone = pytz.timezone('Asia/Kolkata')
+    utc_time = local_timezone.localize(local_time).astimezone(pytz.UTC)
 
     # ================ JULIAN_TIME ====================================
-    jday = swe.utc_to_jd(current_time.year, current_time.month,
-                         current_time.day, current_time.hour,
-                         current_time.minute, current_time.second, 1)
-
-    print()
-    swe.set_topo(lon, lat)
+    # jday = swe.utc_to_jd(current_time.year, current_time.month,
+    #                      current_time.day, current_time.hour,
+    #                      current_time.minute, current_time.second, 1)
+    jday_new = swe.utc_to_jd(int(incomingYear), int(incomingMonth), int(incomingDay),
+                             utc_time.hour, utc_time.minute, 0, 1)
+    swe.set_topo(long, lat)
     swe.set_sid_mode(swe.SIDM_LAHIRI, 0, 0)
-    planet_pos = swe.calc(jday[0], planet_num, swe.FLG_SIDEREAL)
-    # print(house_pos[0][0])
+    planet_pos = swe.calc(jday_new[0], planet_num, swe.FLG_SIDEREAL)
     return (planet_pos[0][0])
