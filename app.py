@@ -1,7 +1,7 @@
 from flask import Flask, request
 import swisseph as swe
 import requests
-from util import get_planet_position, get_degree_minute_zodiac, get_moon_position, zodiacData, get_houses_position, get_planet_by_dateTime,getPlanetsByDate
+from util import get_planet_position, get_degree_minute_zodiac, get_moon_position, zodiacData, get_houses_position, get_planet_by_date_time,getPlanetsByDate
 
 import sys
 import time
@@ -97,28 +97,6 @@ def get_houses():
     }
 # ==============================================================================
 
-
-# @app.route('/natal', methods=['GET', 'POST'])
-# def get_natal():
-#     planets = [swe.SATURN, swe.JUPITER, swe.MARS,
-#                swe.SUN, swe.VENUS,  swe.MERCURY, swe.MOON]
-#     message = []
-
-#     for planet in planets:
-#         planet_pos = get_planet_by_dateTime(planet)
-#         degree, zodiac, minute = get_degree_minute_zodiac(planet_pos)
-#         message.append({
-#             'name': swe.get_planet_name(planet),
-#             'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
-#         })
-
-#     return {
-#         "status": 200,
-#         "data": message,
-#     }
-# ===================================================================
-
-
 @app.route('/get-moon')
 def get_moon():
 
@@ -136,16 +114,13 @@ def get_moon():
     }
 
 
-
-
-
+# ==============================================================================
 
 @app.route('/get-planet-byDateTime', methods=['POST'])
 def get_planet_byDateTime():
     date = request.json['date']
-    print(date,"=======================================")
+    print(date,"===============   ========================")
     time = request.json['time']
-    # time = "19:58"
 
     planets = [
         swe.MOON,
@@ -159,7 +134,7 @@ def get_planet_byDateTime():
     planetPositionForGivenDateTime = []
 
     for planet in planets:
-        planet_pos = get_planet_by_dateTime(planet,date,time)
+        planet_pos = get_planet_by_date_time(planet,date,time)
         degree, zodiac, minute = get_degree_minute_zodiac(planet_pos)
 
         planetPositionForGivenDateTime.append({
@@ -168,18 +143,14 @@ def get_planet_byDateTime():
                 'degree': degree,
                 "minute": minute,
                 'sign': zodiacData[zodiac]['sign'],
-                # 'name': zodiacData[zodiac]['name']
             }
         })   
-
-    
-   
-    # dataP= getPlanetsByDate(date)
 
     return {
         "status": 200,
         "data": planetPositionForGivenDateTime
     }
+
 
 
 if __name__ == '__main__':

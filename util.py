@@ -162,8 +162,7 @@ def get_houses_position(lat, long, date, time):
     return [house_pos[0], ayanamsha]
 
 
-def get_planet_by_dateTime(planet,date,time):
-    print(' ---date------------->',date)
+def get_planet_by_date_time(planet,date,time):
 
 
     swe.set_ephe_path(f"{path}\swisseph")

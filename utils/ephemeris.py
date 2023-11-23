@@ -72,7 +72,7 @@ def get_houses_position():
     return [house_pos[0], ayanamsha]
 
 
-def get_planet_by_dateTime(planet):
+def get_planet_by_date_time(planet):
 
     swe.set_ephe_path(f"{path}\swisseph")
     year = 1995
