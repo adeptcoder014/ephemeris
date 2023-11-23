@@ -150,29 +150,29 @@ def get_houses_position(lat, long, date, time):
     UTCdt_new = swe.utc_time_zone(int(incomingYear), int(incomingMonth), int(incomingDay),
                                   int(incomingHour), int(incomingMinute), 0, 5.5)
 
-    JD = swe.utc_to_jd(UTCdt_new[0], UTCdt_new[1], UTCdt_new[2],
-                       UTCdt_new[3], UTCdt_new[4], 0, 1)
+    JD = swe.utc_to_jd(UTCdt_new[0], UTCdt_new[1], UTCdt_new[2],UTCdt_new[3], UTCdt_new[4], 0, 1)
 
     natalUT = JD[1]
     ayanamsha = swe.get_ayanamsa(natalUT)
     LAT = lat
     LON = long
     hsysP = bytes('E', 'utf-8')
-    house_pos = swe.houses_ex(natalUT, LAT, LON, hsysP,
-                              swe.FLG_SIDEREAL)
+    house_pos = swe.houses_ex(natalUT, LAT, LON, hsysP,swe.FLG_SIDEREAL)
 
     return [house_pos[0], ayanamsha]
 
 
-def get_planet_by_dateTime(planet):
+def get_planet_by_dateTime(planet,date,time):
+    print(' ---date------------->',date)
+
 
     swe.set_ephe_path(f"{path}\swisseph")
-    year = 2023
-    month = 11
-    day = 23
-    hour = 17
-    minute = 40
-    second = 0
+    year = int(date.split("-")[0])
+    month = int(date.split("-")[1])
+    day = int(date.split("-")[2])
+    hour = int(time.split(":")[0])
+    minute = int(time.split(":")[1])
+    second = 00
 
     planet_num = planet
     lat = 26.85

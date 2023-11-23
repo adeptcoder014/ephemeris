@@ -98,24 +98,24 @@ def get_houses():
 # ==============================================================================
 
 
-@app.route('/natal', methods=['GET', 'POST'])
-def get_natal():
-    planets = [swe.SATURN, swe.JUPITER, swe.MARS,
-               swe.SUN, swe.VENUS,  swe.MERCURY, swe.MOON]
-    message = []
+# @app.route('/natal', methods=['GET', 'POST'])
+# def get_natal():
+#     planets = [swe.SATURN, swe.JUPITER, swe.MARS,
+#                swe.SUN, swe.VENUS,  swe.MERCURY, swe.MOON]
+#     message = []
 
-    for planet in planets:
-        planet_pos = get_planet_by_dateTime(planet)
-        degree, zodiac, minute = get_degree_minute_zodiac(planet_pos)
-        message.append({
-            'name': swe.get_planet_name(planet),
-            'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
-        })
+#     for planet in planets:
+#         planet_pos = get_planet_by_dateTime(planet)
+#         degree, zodiac, minute = get_degree_minute_zodiac(planet_pos)
+#         message.append({
+#             'name': swe.get_planet_name(planet),
+#             'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
+#         })
 
-    return {
-        "status": 200,
-        "data": message,
-    }
+#     return {
+#         "status": 200,
+#         "data": message,
+#     }
 # ===================================================================
 
 
@@ -143,6 +143,9 @@ def get_moon():
 @app.route('/get-planet-byDateTime', methods=['POST'])
 def get_planet_byDateTime():
     date = request.json['date']
+    print(date,"=======================================")
+    time = request.json['time']
+    # time = "19:58"
 
     planets = [
         swe.MOON,
@@ -155,9 +158,8 @@ def get_planet_byDateTime():
         swe.MEAN_NODE]
     planetPositionForGivenDateTime = []
 
-    print("zodiacData-----",zodiacData)
     for planet in planets:
-        planet_pos = get_planet_by_dateTime(planet)
+        planet_pos = get_planet_by_dateTime(planet,date,time)
         degree, zodiac, minute = get_degree_minute_zodiac(planet_pos)
 
         planetPositionForGivenDateTime.append({
