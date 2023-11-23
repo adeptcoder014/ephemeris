@@ -169,9 +169,9 @@ def get_planet_by_dateTime(planet):
     swe.set_ephe_path(f"{path}\swisseph")
     year = 2023
     month = 11
-    day = 22
-    hour = 19
-    minute = 58
+    day = 23
+    hour = 17
+    minute = 40
     second = 0
 
     planet_num = planet
@@ -251,3 +251,4 @@ def getPlanetsByDate(dateTime):
     swe.set_sid_mode(swe.SIDM_LAHIRI, 0, 0)
     planet_pos = swe.calc(jday_new[0], planet_num, swe.FLG_SIDEREAL)
     return (planet_pos[0][0])
+ 

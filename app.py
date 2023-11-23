@@ -15,70 +15,6 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-# ==============================================================================
-
-
-# @app.route('/')
-# def get():
-#     sun = swe.SUN
-#     moon = swe.MOON
-#     mercury = swe.MERCURY
-#     venus = swe.VENUS
-#     mars = swe.MARS
-#     jupiter = swe.JUPITER
-#     saturn = swe.SATURN
-#     sun_pos = get_planet_position(sun)
-#     moon_pos = get_planet_position(moon)
-#     mercury_pos = get_planet_position(mercury)
-#     venus_pos = get_planet_position(venus)
-#     mars_pos = get_planet_position(mars)
-#     jupiter_pos = get_planet_position(jupiter)
-#     saturn_pos = get_planet_position(saturn)
-
-#     degree, zodiac, minute = get_degree_minute_zodiac(sun_pos)
-#     degree1, zodiac1, minute1 = get_degree_minute_zodiac(moon_pos)
-#     degree2, zodiac2, minute2 = get_degree_minute_zodiac(mercury_pos)
-#     degree3, zodiac3, minute3 = get_degree_minute_zodiac(venus_pos)
-#     degree4, zodiac4, minute4 = get_degree_minute_zodiac(mars_pos)
-#     degree5, zodiac5, minute5 = get_degree_minute_zodiac(jupiter_pos)
-#     degree6, zodiac6, minute6 = get_degree_minute_zodiac(saturn_pos)
-
-#     message = [
-#         {
-#             'name': "sun",
-#             'position': f"{degree} degree {round(minute)} minute in {zodiacData[zodiac]}"
-#         },
-#         {
-#             'name': "moon",
-#             'position': f"{degree1} degree {round(minute1)} minute in {zodiacData[zodiac1]}",
-#         },
-#         {
-#             'name': "mercury",
-#             'position': f"{degree2} degree {round(minute2)} minute in {zodiacData[zodiac2]}",
-#         },
-#         {
-#             'name': "venus",
-#             'position': f"{degree3} degree {round(minute3)} minute in {zodiacData[zodiac3]}",
-#         },
-#         {
-#             'name': "mars",
-#             'position': f"{degree4} degree {round(minute4)} minute in {zodiacData[zodiac4]}",
-#         },
-#         {
-#             'name': "jupiter",
-#             'position': f"{degree5} degree {round(minute5)} minute in {zodiacData[zodiac5]}",
-#         },
-#         {
-#             'name': "saturn",
-#             'position':  f"{degree6} degree {round(minute6)} minute in {zodiacData[zodiac6]}",
-#         },
-#     ]
-
-#     json = {
-#         "status": 200,
-#         "data": message
-#     }
-#     return json
 
 # ===========================================================
 @app.route('/')
@@ -109,26 +45,14 @@ def optimize_get():
         swe.SATURN,
         swe.MEAN_NODE]
     message = []
-    # message=[
-    #     {
-    #         'name': swe.get_planet_name(planet),
-    #         'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
-    #     }
-    #     for planet in planets
-    #     planet_pos = get_planet_position(planet,lat, long, date, timeOfBirth)
-    #     degree,zodiac, minute = get_degree_minute_zodiac(planet_pos)
-    #     ]
+
     for planet in planets:
         planet_pos = get_planet_position(planet, lat, long, date, timeOfBirth)
         degree, zodiac, minute = get_degree_minute_zodiac(planet_pos)
-        # message.append({
-        #     'name': swe.get_planet_name(planet),
-        #     'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'"
-        # })
+   
 
         message.append({
             'name': swe.get_planet_name(planet).lower(),
-            # 'position': f"{degree}° {zodiacData[zodiac]} {round(minute)}'",
             'position': {
                 'degree': degree,
                 "minute": minute,
@@ -137,7 +61,6 @@ def optimize_get():
             }
         })
 
-    print('---------------------- message -------------------------------', message)
     return {
         "status": 200,
         "data": message
@@ -220,17 +143,40 @@ def get_moon():
 @app.route('/get-planet-byDateTime', methods=['POST'])
 def get_planet_byDateTime():
     date = request.json['date']
-    
-    planet_pos = get_planet_by_dateTime(swe.MOON)
 
-    print("planet_pos -----",get_degree_minute_zodiac(planet_pos))
+    planets = [
+        swe.MOON,
+        swe.MERCURY,
+        swe.VENUS,
+        swe.SUN,
+        swe.MARS,
+        swe.JUPITER,
+        swe.SATURN,
+        swe.MEAN_NODE]
+    planetPositionForGivenDateTime = []
+
+    print("zodiacData-----",zodiacData)
+    for planet in planets:
+        planet_pos = get_planet_by_dateTime(planet)
+        degree, zodiac, minute = get_degree_minute_zodiac(planet_pos)
+
+        planetPositionForGivenDateTime.append({
+            'name': swe.get_planet_name(planet).lower(),
+            'position': {
+                'degree': degree,
+                "minute": minute,
+                'sign': zodiacData[zodiac]['sign'],
+                # 'name': zodiacData[zodiac]['name']
+            }
+        })   
+
     
    
     # dataP= getPlanetsByDate(date)
 
     return {
         "status": 200,
-        "data": "message"
+        "data": planetPositionForGivenDateTime
     }
 
 
