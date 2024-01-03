@@ -143,6 +143,7 @@ def get_planet_byDateTime():
                 'degree': degree,
                 "minute": minute,
                 'sign': zodiacData[zodiac]['sign'],
+                'name': zodiacData[zodiac]['name'],
             }
         })   
 
