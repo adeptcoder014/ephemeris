@@ -152,6 +152,57 @@ def get_planet_byDateTime():
         "data": planetPositionForGivenDateTime
     }
 
+# ==============================================================================
+
+@app.route('/get-planet-byDateTime_d', methods=['POST'])
+def get_planet_byDateTime_d():
+    date = request.json['date']
+    time = request.json['time']
+    planet = request.json['planet']
+    rashi = request.json['rashi']
+    
+    def handle_planet_swiss_value_from_name(planet_name):
+        planet_swiss_value_obj={
+            'venus':swe.VENUS,
+            'moon':swe.MOON,
+            'mercury':swe.MERCURY,
+            'sun':swe.SUN,
+            'mars':swe.MARS,
+            'jupiter':swe.JUPITER,
+            'saturn':swe.SATURN,
+            'meanNode':swe.MEAN_NODE
+        }
+        if planet_name in planet_swiss_value_obj:
+            return planet_swiss_value_obj[planet_name]
+        else:
+            return f"Error: {planet_name} is not a valid planet."
+
+    planet_swiss_value = handle_planet_swiss_value_from_name(planet)
+    
+    
+
+    
+    planet_pos = get_planet_by_date_time(planet_swiss_value,date,time)
+    degree, zodiac, minute = get_degree_minute_zodiac(planet_pos)
+    
+    specificPlanetPositionForGivenDateTime={
+            'name': planet,
+            'position': {
+                'degree': degree,
+                "minute": minute,
+                'sign': zodiacData[zodiac]['sign'],
+                'name': zodiacData[zodiac]['name'],
+            }
+        }
+
+    return {
+        "status": 200,
+        "data": specificPlanetPositionForGivenDateTime
+    }
+
+
+
+
 
 
 if __name__ == '__main__':

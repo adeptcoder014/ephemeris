@@ -251,3 +251,5 @@ def getPlanetsByDate(dateTime):
     planet_pos = swe.calc(jday_new[0], planet_num, swe.FLG_SIDEREAL)
     return (planet_pos[0][0])
  
+ 
+ 
