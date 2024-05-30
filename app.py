@@ -183,6 +183,7 @@ def get_planet_byDateTime_d():
 
     
     planet_pos = get_planet_by_date_time(planet_swiss_value,date,time)
+    
     degree, zodiac, minute = get_degree_minute_zodiac(planet_pos)
     
     specificPlanetPositionForGivenDateTime={
@@ -200,6 +201,34 @@ def get_planet_byDateTime_d():
         "data": specificPlanetPositionForGivenDateTime
     }
 
+
+
+
+
+@app.route('/transit-time', methods=['POST'])
+def get_transit_time():
+    data = request.json
+    planet_name = data.get('planet', '').lower()
+    rashi = data.get('rashi', '').lower()
+
+    # Ensure valid planet and zodiac sign are provided
+    if planet_name not in ['moon', 'mercury', 'venus', 'sun', 'mars', 'jupiter', 'saturn', 'mean_node'] :
+        # or rashi not in zodiacData['zodiac']:
+        return {"status": 400, "error": "Invalid planet or zodiac sign"}
+
+    planet_swiss_value = getattr(swe, planet_name.upper())  # Get the Swiss Ephemeris value for the planet
+    print('planet_swiss_value=--------',planet_swiss_value)
+
+    # Get the transit time for the specified planet in the given zodiac sign
+    transit_time = getPlanetsByDate(planet_swiss_value, rashi)
+
+    return {
+        "status": 200,
+        "data": {
+            "planet": planet_name,
+            "transit_time": transit_time
+        }
+    }
 
 
 
