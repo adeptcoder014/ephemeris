@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import os
 from time import sleep
 import json
+import gzip
 
 app = Flask(__name__)
 path = os.getcwd()
@@ -20,7 +21,7 @@ zodiacData = {
     8: {'name': 'sagittarius', 'sign': '♐'},
     9: {'name': 'capricorn', 'sign': '♑'},
     10: {'name': 'aquarius', 'sign': '♒'},
-    11: {'name': 'pisces', 'sign': '♓'}
+    11: {'name': 'pisces', 'sign': '♓'} 
 }
 
 angles = [0.00, 11.25, 30.00, 60.00, 90.00, 120.00, 150.00, 180.00, 210.00, 240.00, 270.00, 300.00, 330.00]
@@ -44,13 +45,6 @@ def get_planet_by_date_time(planet, date, time):
     swe.set_sid_mode(swe.SIDM_LAHIRI)
     planet_pos = swe.calc(jday[0], planet, swe.FLG_SIDEREAL)
     return planet_pos[0]  # Return degree
-
-def get_degree_minute_zodiac(planet_pos):
-    deg = int(planet_pos)
-    degree = deg % 30
-    minute = (planet_pos - deg) * 60
-    zodiac = int(deg / 30)
-    return degree, zodiac, minute
 
 @app.route('/get-planet-byDateTime_d', methods=['POST'])
 def get_planet_byDateTime_d():
@@ -80,41 +74,34 @@ def get_planet_byDateTime_d():
     transit_data = []
     angle_index = 0
 
-    while current_datetime <= end_datetime :
-    # while current_datetime <= end_datetime and angle_index < len(angles):
+    while current_datetime <= end_datetime:
         date_str = current_datetime.strftime('%Y-%m-%d')
         time_str = current_datetime.strftime('%H:%M')
         
         planet_pos = get_planet_by_date_time(planet_swiss_value, date_str, time_str)
-        # print(date_str,time_str,round(planet_pos[0], 2) )
-        # print('------',len(angles) ,angle_index,angles[angle_index])
-        print('=============================', round(planet_pos[0], 1))
-        if round(planet_pos[0], 1) == angles[angle_index]:
-            print('=======  ofund  ======================' )
-            degree, zodiac, minute = get_degree_minute_zodiac(round(planet_pos[0], 2))
-            
-            specificPlanetPositionForGivenDateTime = {
-                'name': planet,
-                'date': current_datetime.strftime('%Y-%m-%d'),
-                'time': current_datetime.strftime('%H:%M:%S'),           
-                'position': {
-                    'degree': degree,
-                    'minute': round(minute),
-                    # 'sign': zodiacData[zodiac]['sign'],
-                    'name': zodiacData[zodiac]['name']
-                }
-            }
-            transit_data.append(specificPlanetPositionForGivenDateTime)
+        print( planet_pos[0], date_str, time_str)
+        
+        # if round(planet_pos, 1) == angles[angle_index]:
+        specificPlanetPositionForGivenDateTime = {
+            'name': planet,
+            'date': current_datetime.strftime('%Y-%m-%d'),
+            'time': current_datetime.strftime('%H:%M:%S'),
+            'absolute_position': round(planet_pos[0], 4),  # Absolute position of the planet
+            # 'absolute_position_1': planet_pos[0]  # Absolute position of the planet
+        }
+        transit_data.append(specificPlanetPositionForGivenDateTime)
 
         angle_index += 1  # Move to the next angle
-        if angle_index == len(angles) :
-                angle_index=0
-        
+        if angle_index == len(angles):
+            angle_index = 0
         
         current_datetime += timedelta(minutes=1)  # Iterate minute by minute
-
-    with open('transit_data.json', 'w') as json_file:
+    
+    with open('transit_data_minutely.json', 'w') as json_file:
         json.dump(transit_data, json_file, indent=4, ensure_ascii=False)
+        
+    # with gzip.open('transit_data_hourly.json.gz','rt',encoding='utf-8') as zipfile:
+    #     zipfile.write(json.dump(transit_data, indent=4,fp=None, ensure_ascii=False))
 
     return {
         "status": 200,
