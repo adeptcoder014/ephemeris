@@ -16,24 +16,25 @@ def compress_json(input_file, output_file):
     with gzip.open(output_file, 'wt', encoding='utf-8') as gz:
         gz.write(json_str)
 
-# Example usage
-input_file = 'transit_data_moon_minutely.json'
-output_file = 'compressed_file.json.gz'
-compress_json(input_file, output_file)
+
 
 def load_compressed_json(file_path):
     with gzip.open(file_path, 'rt', encoding='utf-8') as f:
         return json.load(f)
 
-# Load your compressed JSON data at the start (or on request, depending on your use case)
-DATA_FILE = 'compressed_file.json.gz'
-data = load_compressed_json(DATA_FILE)
 
 @app.route('/search', methods=['GET'])
 def search_data():
-    # Extract query parameters
+
     date = request.args.get('date')
     planet = request.args.get('planet')
+    
+    DATA_FILE = f'./transit_data/transit_data_{planet}_data_compressed.json.json.gz'
+    
+    
+    data = load_compressed_json(DATA_FILE)
+    
+    # Extract query parameters
     print('---------------------', planet)
     
     if not date or not planet:
