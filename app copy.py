@@ -97,7 +97,7 @@ def get_planet_byDateTime_d():
         
         current_datetime += timedelta(minutes=1)  # Iterate minute by minute
     
-    with open('transit_data_minutely.json', 'w') as json_file:
+    with open(f'transit_data_{planet}_minutely.json', 'w') as json_file:
         json.dump(transit_data, json_file, indent=4, ensure_ascii=False)
         
     # with gzip.open('transit_data_hourly.json.gz','rt',encoding='utf-8') as zipfile:
