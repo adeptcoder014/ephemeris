@@ -240,7 +240,7 @@ from astral.sun import sun
 from astral import LocationInfo
 import pytz
 
-app = Flask(__name__)
+# app = Flask(__name__)
 
 # Order of the planets in Chaldean sequence
 planets = ["Saturn", "Jupiter", "Mars", "Sun", "Venus", "Mercury", "Moon"]
