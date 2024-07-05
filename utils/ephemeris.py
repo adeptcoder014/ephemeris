@@ -99,3 +99,12 @@ def get_planet_by_date_time(planet):
     planet_pos = swe.calc(jday[0], planet_num, swe.FLG_SIDEREAL)
     # print(house_pos[0][0])
     return (planet_pos[0][0])
+
+
+import gzip
+import json
+
+def load_compressed_json(file_path):
+    with gzip.open(file_path, 'rt', encoding='utf-8') as f:
+        return json.load(f)
+

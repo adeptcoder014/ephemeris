@@ -1,7 +1,7 @@
 from flask import Flask, request
 import swisseph as swe
 import requests
-from util import get_planet_position, get_degree_minute_zodiac, get_moon_position, zodiacData, get_houses_position, get_planet_by_date_time,getPlanetsByDate
+from util import get_planet_position, get_degree_minute_zodiac, get_moon_position, zodiacData, get_houses_position, get_planet_by_date_time,getPlanetsByDate,load_compressed_json
 
 import sys
 import time
@@ -359,10 +359,12 @@ city_position_obj={
     }
 }
         
-@app.route('/planetary-hours', methods=['POST'])
+@app.route('/planetary-hours', methods=['GET'])
 def get_planetary_hours_api():
-    city = request.json['city']
-    date_str = request.json['date']
+    # city = request.json['city']
+    city = request.args.get('city')
+    date_str = request.args.get('date')
+    # date_str = request.json['date']
     date = datetime.strptime(date_str, '%Y-%m-%d')
     # print('---- started -----', request.data)
     print('-----',date,city)
@@ -384,6 +386,45 @@ def get_planetary_hours_api():
         "planetaryHours":response_object
     }
 
+#
+
+
+
+
+
+
+@app.route('/search', methods=['GET'])
+def search_data():
+
+    date = request.args.get('date')
+    planet = request.args.get('planet')
+    
+    DATA_FILE = f'./transit_data/transit_data_{planet}_data_compressed.json.json.gz'
+    
+    
+    data = load_compressed_json(DATA_FILE)
+    
+    # Extract query parameters
+    print('---------------------', planet)
+    
+    if not date or not planet:
+        return jsonify({"error": "Please provide both 'date' and 'planet' parameters"}), 400
+    
+    # Search in the data
+    results = [entry for entry in data if entry.get('date') == date and entry.get('name') == planet]
+    
+    if not results:
+        return jsonify({"error": "No matching data found"}), 404
+    
+    # Calculate the average of 'absolute_position'
+    total_absolute_position = sum(entry['absolute_position'] for entry in results)
+    average_absolute_position = total_absolute_position / len(results)
+    
+    return jsonify({
+        "count": len(results),
+        "average_absolute_position": average_absolute_position,
+        "results": results
+    })
 
 # =====================================
 
