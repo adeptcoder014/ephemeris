@@ -83,6 +83,72 @@ zodiacData = [
 ]
 
 
+
+# zodiacData = [
+#     {
+#         "serial": 0,
+#         "sign": "♈",
+#         "name": "aries"
+#     },
+#      {
+#         "serial": 1,
+#         "sign": "♉",
+#         "name": "taurus"
+#     },
+#      {
+#         "serial": 2,
+#         "sign": "♊",
+#         "name": "gemini"
+#     },
+#      {
+#         "serial": 3,
+#         "sign": "♋",
+#         "name": "cancer"
+#     },
+#      {
+#         "serial": 4,
+#         "sign": "♌",
+#         "name": "leo"
+#     },
+#      {
+#         "serial": 5,
+#         "sign": "♍",
+#         "name": "virgo"
+#     },
+#      {
+#         "serial": 6,
+#         "sign": "♎",
+#         "name": "libra"
+#     },
+#      {
+#         "serial": 7,
+#         "sign": "♏",
+#         "name": "scorpio"
+#     },
+#      {
+#         "serial": 8,
+#         "sign": "♐",
+#         "name": "sagittarius"
+#     },
+#      {
+#         "serial": 9,
+#         "sign": "♑",
+#         "name": "capricorn"
+#     },
+#      {
+#         "serial": 10,
+#         "sign": "♒",
+#         "name": "aquarius"
+#     },
+#      {
+#         "serial": 11,
+#         "sign": "♓",
+#         "name": "pisces"
+#     }
+# ]
+
+
+
 # =============================================
 path = os.getcwd()
 
