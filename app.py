@@ -455,6 +455,7 @@ def search_data():
                     "position":{
                         'degree':degree, 
                         'zodiac':zodiacData[zodiac]['sign'],
+                        'zodiacName':zodiacData[zodiac]['name'],
                         'minute':minute
                         },
                     "date": result['date'],
