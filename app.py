@@ -139,6 +139,7 @@ def get_planet_byDateTime():
 
         planetPositionForGivenDateTime.append({
             'name': swe.get_planet_name(planet).lower(),
+            'absolutePosition':planet_pos,
             'position': {
                 'degree': degree,
                 "minute": minute,
@@ -471,6 +472,92 @@ def search_data():
         "data": response_data })
 
 # =====================================
+
+@app.route('/get-planet-transit-py', methods=['GET'])
+def get_transit():
+
+    # date = request.args.get('date')
+    planet = request.args.get('planet')
+    
+    DATA_FILE = f'./transit_data/transit_data_{planet}_data_compressed.json.json.gz'
+    
+    
+    data = load_compressed_json(DATA_FILE)
+    
+    # Extract query parameters
+    print('---------------------', get_degree_minute_zodiac(59.9998))
+    
+    # if not date or not planet:
+    #     return jsonify({"error": "Please provide both 'date' and 'planet' parameters"}), 400
+    
+    # Search in the data
+    results = [entry for entry in data if entry.get('name') == planet]
+    
+    if not results:
+        return jsonify({"error": "No matching data found"}), 404
+    
+  
+    ingress_degree=[0.00,30.00,60.00,90.00,120.00,150.00,180.00,210.00,240.00,270.00,300.00,330.00]
+    # ingress_degree=[0,30,60,90,120,150,180,210,240,270,300,330]
+    response_data=[]
+    seen_positions = set()
+
+    for result in results : 
+        rounded_position = round(result['absolute_position'],3)
+        rounded_position_moon = round(result['absolute_position'],2)
+
+        if planet != 'moon' and rounded_position in ingress_degree and   rounded_position not in seen_positions:
+            degree, zodiac, minute = get_degree_minute_zodiac(round(result['absolute_position']))
+            response_data.append(
+                {
+                    "name": result['name'],
+                    # 'absolute_position' : round(result['absolute_position']),
+                    'absolute_position' : (result['absolute_position']),
+                    "position":{
+                        'degree':degree, 
+                        'zodiac':zodiacData[zodiac]['sign'],
+                        'zodiacName':zodiacData[zodiac]['name'],
+
+                        'minute':minute
+                        },
+                    "date": result['date'],
+                    "time":result['time']
+                 })
+            seen_positions.add(rounded_position)
+
+
+# ========================================
+        elif planet == 'moon' and rounded_position_moon in ingress_degree :
+            degree, zodiac, minute = get_degree_minute_zodiac(round(result['absolute_position']))
+            response_data.append(
+                {
+                    "name": result['name'],
+                    # 'absolute_position' : round(result['absolute_position']),
+                    'absolute_position' : (result['absolute_position']),
+                    "position":{
+                        'degree':degree, 
+                        'zodiac':zodiacData[zodiac]['sign'],
+                        'zodiacName':zodiacData[zodiac]['name'],
+                        'minute':minute
+                        },
+                    "date": result['date'],
+                    "time":result['time']
+                 })
+            
+     
+    return jsonify({
+        "count": len(response_data),
+        "data": response_data })
+
+# ==================================
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000)
