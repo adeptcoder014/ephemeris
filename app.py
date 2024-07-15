@@ -71,13 +71,14 @@ def optimize_get():
 
 @app.route('/houses', methods=['POST'])
 def get_houses():
-    data = request.json['value']
-    lat = data['location']['lat']
-    long = data['location']['long']
-    date = data['dob']
+    data = request.json
+    print('-------- started -------------',request.json)
+    lat = data['lat']
+    long = data['long']
+    date = data['date']
     timeOfBirth = data['time']
 
-    data['location']
+   
     positions = get_houses_position(lat, long, date, timeOfBirth)[0]
     # ayanamsha = get_houses_position()[1]
     houses = []

@@ -56,5 +56,20 @@ def search_data():
         "results": results
     })
 
+
+
+@app.route('/x', methods=['GET'])
+def x():
+
+    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    return f'Client IP address: {client_ip}'
+    
+
+
+
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
