@@ -58,14 +58,6 @@ def search_data():
 
 
 
-@app.route('/x', methods=['GET'])
-def x():
-
-    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    return f'Client IP address: {client_ip}'
-    
-
-
 
 
 
