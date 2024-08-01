@@ -556,33 +556,33 @@ def get_transit():
 import pandas as pd
 # Load the CSV data into a DataFrame
 # df = pd.read_csv('planetary_angle_differences.csv')
-df = pd.read_csv('planetary_positions_minute_by_minute_new.csv')
+# df = pd.read_csv('planetary_positions_minute_by_minute_new.csv')
 
 # Route to get all data
-@app.route('/data', methods=['GET'])
-def get_all_data():
-    date = request.args.get('date')
-    filtered_data = df[df['DateTime'] == date].to_dict(orient='records')
-    if not filtered_data:
-        return jsonify({'error': 'No data found for the given date'}), 404
-    return jsonify(filtered_data[0])
+# @app.route('/data', methods=['GET'])
+# def get_all_data():
+#     date = request.args.get('date')
+#     filtered_data = df[df['DateTime'] == date].to_dict(orient='records')
+#     if not filtered_data:
+#         return jsonify({'error': 'No data found for the given date'}), 404
+#     return jsonify(filtered_data[0])
 
 # Route to get data by DateTime
-@app.route('/data/<string:datetime>', methods=['GET'])
-def get_data_by_datetime(datetime):
-    row = df[df['DateTime'] == datetime]
-    if row.empty:
-        return jsonify({'error': 'DateTime not found'}), 404
-    return jsonify(row.to_dict(orient='records')[0])
+# @app.route('/data/<string:datetime>', methods=['GET'])
+# def get_data_by_datetime(datetime):
+#     row = df[df['DateTime'] == datetime]
+#     if row.empty:
+#         return jsonify({'error': 'DateTime not found'}), 404
+#     return jsonify(row.to_dict(orient='records')[0])
 
-# Route to get angle differences for a specific planet
-@app.route('/data/angle/<string:planet1>/vs/<string:planet2>', methods=['GET'])
-def get_angle_difference(planet1, planet2):
-    column_name = f'{planet1} Position vs {planet2} Position'
-    if column_name not in df.columns:
-        return jsonify({'error': 'Invalid planet names'}), 404
-    data = df[['DateTime', column_name]].to_dict(orient='records')
-    return jsonify(data)
+# # Route to get angle differences for a specific planet
+# @app.route('/data/angle/<string:planet1>/vs/<string:planet2>', methods=['GET'])
+# def get_angle_difference(planet1, planet2):
+#     column_name = f'{planet1} Position vs {planet2} Position'
+#     if column_name not in df.columns:
+#         return jsonify({'error': 'Invalid planet names'}), 404
+#     data = df[['DateTime', column_name]].to_dict(orient='records')
+#     return jsonify(data)
 
 
 
