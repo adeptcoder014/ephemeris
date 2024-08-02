@@ -198,10 +198,10 @@ def get_planet_position(planet, lat, long, date, timeOfBirth):
     return (planet_pos[0][0])
 
 
-def get_houses_position(lat, long, date, time):
+def get_houses_position(lat, long, date, time, timezone,offset):
     swe.set_ephe_path(f"{path}\swisseph")
 
-    local_tz = pytz.timezone('Asia/Kolkata')
+    local_tz = pytz.timezone(timezone)
     current = datetime.datetime.now(local_tz)
 
     incomingYear = date.split("-")[0]
@@ -214,7 +214,7 @@ def get_houses_position(lat, long, date, time):
     #                           current.hour, current.minute, current.second, 5.5)
 
     UTCdt_new = swe.utc_time_zone(int(incomingYear), int(incomingMonth), int(incomingDay),
-                                  int(incomingHour), int(incomingMinute), 0, 5.5)
+                                  int(incomingHour), int(incomingMinute), 0.00, offset)
 
     JD = swe.utc_to_jd(UTCdt_new[0], UTCdt_new[1], UTCdt_new[2],UTCdt_new[3], UTCdt_new[4], 0, 1)
 

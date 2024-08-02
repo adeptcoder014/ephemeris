@@ -6,7 +6,7 @@ from util import get_planet_position, get_degree_minute_zodiac, get_moon_positio
 import sys
 import time
 import logging
-
+ 
 from flask_cors import CORS
 import json
 
@@ -71,15 +71,24 @@ def optimize_get():
 
 @app.route('/houses', methods=['POST'])
 def get_houses():
-    data = request.json
-    print('-------- started -------------',request.json)
-    lat = data['lat']
-    long = data['long']
-    date = data['date']
-    timeOfBirth = data['time']
-
    
-    positions = get_houses_position(lat, long, date, timeOfBirth)[0]
+    data = request.json
+    fetched_location = data['location']
+    date = data['date']
+    time = data['time']
+    # long = data['long']
+    # date = data['date']
+    # timeOfBirth = data['time']
+    location_detail = city_position_obj[fetched_location]
+   
+    positions = get_houses_position(
+        location_detail['latitude'],
+        location_detail['longitude'],
+        date,
+        time,
+        location_detail['astral_value'][2],
+        location_detail['astral_value'][3]
+        )[0]
     # ayanamsha = get_houses_position()[1]
     houses = []
     for pos in positions:
@@ -340,24 +349,24 @@ def get_planetary_hours(city, date):
 
 city_position_obj={
     'london' : {
-        'latitude' : 51.5074,  
-        'longitude' : -0.1278  ,
-        'astral_value':("London", "England", "Europe/London")
+        'latitude' : 51.51,  
+        'longitude' : -0.09  ,
+        'astral_value':("London", "England", "Europe/London",1.00),
     },
      'delhi' : {
         'latitude' : 28.7041,  
         'longitude' : 77.1025,
-        'astral_value':("Delhi", "India", "Asia/Kolkata")
+        'astral_value':("Delhi", "India", "Asia/Kolkata",5.5)
     },
       'mumbai' : {
         'latitude' : 19.0760,  
         'longitude' : 72.8777 ,
-        'astral_value':("Mumbai", "India", "Asia/Kolkata")
+        'astral_value':("Mumbai", "India", "Asia/Kolkata",5.5)
     },
        'lucknow' : {
         'latitude' : 26.8467,  
         'longitude' : 80.9462  ,
-        'astral_value':("Lucknow", "India", "Asia/Kolkata")
+        'astral_value':("Lucknow", "India", "Asia/Kolkata",5.5)
     }
 }
         

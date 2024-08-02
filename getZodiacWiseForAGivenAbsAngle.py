@@ -72,4 +72,4 @@ def get_degree_minute_zodiac(pos):
     return (degree, zodiacData[zodiac]['sign'], minute)
 
 
-print(get_degree_minute_zodiac(69.2226))
+print(get_degree_minute_zodiac(180))
