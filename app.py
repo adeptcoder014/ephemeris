@@ -595,6 +595,39 @@ import pandas as pd
 
 
 
+@app.route('/calculate-aspects', methods=['POST'])
+def calculate_aspects():
+    planet1 = request.json.get('planet1')
+    planet2 = request.json.get('planet2')
+    date_str = request.json.get('date')
+    time_str = request.json.get('time')
+
+    df1 = pd.read_csv(f'ephemeris/{planet1}.csv')
+    df2 = pd.read_csv(f'ephemeris/{planet2}.csv')
+    filtered_data1 = df1[(df1['date'] == date_str) & (df1['time'] == time_str)]
+    filtered_data2 = df2[(df2['date'] == date_str) & (df2['time'] == time_str)]
+
+    if len(filtered_data1) == 0 or len(filtered_data2) == 0:
+        return jsonify({"error": "Data not available for both planets on the given date and time"}), 404
+
+    position1= filtered_data1['absolute_position'].values[0]
+    position2 = filtered_data2['absolute_position'].values[0]
+    print(position1)
+    print(position2)
+    aspect = abs(position1 - position2)
+    aspect_rev = (position2 - position1)
+
+    return jsonify({
+        "planet1": planet1,
+        "planet2": planet2,
+        "date": date_str,
+        "time": time_str,
+        "aspect": aspect,
+        "aspect_rev": aspect_rev
+    })
+
+
+
 
 
 
