@@ -594,39 +594,78 @@ import pandas as pd
 #     return jsonify(data)
 
 
-
 @app.route('/calculate-aspects', methods=['POST'])
 def calculate_aspects():
-    planet1 = request.json.get('planet1')
-    planet2 = request.json.get('planet2')
-    date_str = request.json.get('date')
-    time_str = request.json.get('time')
-
-    df1 = pd.read_csv(f'ephemeris/{planet1}.csv')
-    df2 = pd.read_csv(f'ephemeris/{planet2}.csv')
-    filtered_data1 = df1[(df1['date'] == date_str) & (df1['time'] == time_str)]
-    filtered_data2 = df2[(df2['date'] == date_str) & (df2['time'] == time_str)]
-
-    if len(filtered_data1) == 0 or len(filtered_data2) == 0:
-        return jsonify({"error": "Data not available for both planets on the given date and time"}), 404
-
-    position1= filtered_data1['absolute_position'].values[0]
-    position2 = filtered_data2['absolute_position'].values[0]
-    print(position1)
-    print(position2)
-    aspect = abs(position1 - position2)
-    aspect_rev = (position2 - position1)
-
-    return jsonify({
-        "planet1": planet1,
-        "planet2": planet2,
-        "date": date_str,
-        "time": time_str,
-        "aspect": aspect,
-        "aspect_rev": aspect_rev
-    })
+    # try:
+        request_data = request.json
+        planet1 = request_data['planets']['planet1']  
+        planet2 =  request_data['planets']['planet2']
+        show_all_planet_aspects =  request_data['showAllPlanetAspects']
 
 
+        date_str = request_data['date']
+        time_str = request_data['time']
+        print('--- date_str ---->', date_str)
+        df = pd.read_csv('ephemerides/ephemeris_aspects/aspects.csv')
+        print('--- df ---->', df['aspect_moon_sun'].values[0])
+        filtered_data = df[(df['date'].values[0] == date_str) & (df['time'].values[0] == time_str)]
+        print('--- filtered_data ---->', filtered_data)
+
+        if len(filtered_data) == 0:
+            return jsonify({"error": "Data not available for the given date and time"}), 404
+
+        if show_all_planet_aspects:
+            print('yahan aaya ? ---------------')
+            response={
+                'aspects':{}
+            }
+            all_planetary_aspects = [
+                'aspect_moon_sun',
+                'aspect_moon_mercury',
+                'aspect_moon_venus',
+                'aspect_moon_mars',
+                'aspect_moon_jupiter',
+                'aspect_moon_saturn',
+                'aspect_sun_mercury',
+                'aspect_sun_venus',
+                'aspect_sun_mars',
+                'aspect_sun_jupiter',
+                'aspect_sun_saturn',
+                'aspect_mercury_venus',
+                'aspect_mercury_mars',
+                'aspect_mercury_jupiter',
+                'aspect_mercury_saturn',
+                'aspect_venus_mars',
+                'aspect_venus_jupiter',
+                'aspect_venus_saturn',
+                'aspect_mars_jupiter',
+                'aspect_mars_saturn',
+                'aspect_jupiter_saturn'
+            ]
+            for aspect in all_planetary_aspects:
+                response["aspects"][aspect] = filtered_data[aspect].values[0]
+
+            filtered_data['aspect_moon_sun'].values[0]
+
+            return jsonify(response)
+
+        else:
+            print('else waale pe  aaya ? ---------------')
+
+            aspect = filtered_data[f'aspect_{planet1}_{planet2}']
+            print('--- aspect ---->', aspect)
+
+            response = {
+                # "planet1": planet1,
+                # "planet2": planet2,
+                # "date": date_str,
+                # "time": time_str,
+                # "aspect": aspect.values[0]
+                "aspect": 'kuch bhi'
+            }
+            return jsonify(response)
+    # except Exception as e:
+    #     return jsonify({"error": str(e)}), 500
 
 
 
